@@ -56,6 +56,7 @@ public:
             printf("该进程不在就绪队列中，无法杀死");
         } else {
             readyQueue.erase(goalPid);
+            printf("\n已成功杀死进程%d", goalPid);
         }
     }
 

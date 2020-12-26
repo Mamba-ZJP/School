@@ -39,16 +39,17 @@ public:
 				}
 				memo.erase(deletedPage);
 				// if (time != INT_MAX) rec[deletedPage].pop_front();
+
 			}
 
 			memo.insert(page[i]);
-	
 			printf("第%d次内存中的页面为: ", i + 1);
 			for (int p: memo) printf("%d ", p);
 			printf("\n");
+			
 		}
 
-		printf("总共缺页%d次\n", missPageTime);
+		printf("总共页面置换%d次\n", missPageTime);
 
 	}
 
@@ -63,16 +64,17 @@ public:
 				rec.erase(memo[0]);
 				memo.erase(memo.begin());
 				missPageTime += 1;
+				
 			}
 				
 			memo.push_back(p);
 			rec.insert(p);
-			{
-				printf("当前内存中的页面为: ");
-				for (int p: memo) printf("%d ", p); 
-				printf("\n");
-			}
 			
+			{
+					printf("当前内存中的页面为: ");
+					for (int p: memo) printf("%d ", p); 
+					printf("\n");
+			}
 		}
 
 		printf("总共页面置换%d次\n", missPageTime);
@@ -107,14 +109,15 @@ public:
 				}
 				
 				memo.insert({i, p});
+				
 			}
-			
 			printf("第%d次内存中的页面为: ", i + 1);
-			for (auto &el: memo) printf("%d ", el.second);
-			printf("\n");
+				for (auto &el: memo) printf("%d ", el.second);
+				printf("\n");
+			
 		}
 
-		printf("总共缺页%d次\n", missPageTime);
+		printf("总共页面置换%d次\n", missPageTime);
 
 	}
 private:
