@@ -3,12 +3,12 @@ let alpha, beta, rho, Q, antNumber, maxIterations, antGroup, pheromone, cityNumb
 const mapX = [178,272,176,171,650,499,267,703,408,437,491,74,532,
     416,626,42,271,359,163,508,229,576,147,560,35,714,
     757,517,64,314,675,690,391,628,87,240,705,699,258,
-    428,614,36,360,482,666,597,209,201,492,294];
+    294];
 
 const mapY = [170,395,198,151,242,556,57,401,305,421,267,105,525,
     381,244,330,395,169,141,380,153,442,528,329,232,48,
     498,265,343,120,165,50,433,63,491,275,348,222,288,
-    490,213,524,244,114,104,552,70,425,227,331];
+    490];
 
 function Ant(startCity) {
     this.path = [startCity];
@@ -24,8 +24,6 @@ function Ant(startCity) {
             // console.log("目前在" + currentCity + ", 距离为" + this.sumOfDistance);
         }
         this.GoBackStart();   
-        // console.log(this.sumOfDistance);
-        // console.log("next"); 
     };
 
     this.GoBackStart = function() {
@@ -58,13 +56,17 @@ function Ant(startCity) {
         }
         
         let randomNumber = Math.random();
+        city = 0;
+        let flag = 0;
         for (let i = 1; i < allowedCity.length; i++) {
-            if (randomNumber <= allowedCity[i][2]) {
-                city = i;
+            if (randomNumber <= allowedCity[i][2] && randomNumber > allowedCity[i - 1][2]) {
+                city = allowedCity[i][0];
+                flag = 1;
                 break;
             }
         }
-        // console.log("city: " + city);
+        
+        if (flag == 0) city = allowedCity[allowedCity.length - 1][0];
         return city;
     };
     
@@ -101,7 +103,6 @@ function Initial() {
     antNumber = 50, maxIterations = 150, antGroup = [];
     cityNumber = mapX.length;
 
-    // console.log(cityNumber);
     // 二维信息素矩阵
     pheromone = new Array(cityNumber);
     for (let i = 0; i < cityNumber; i++) {
@@ -111,19 +112,6 @@ function Initial() {
         }
     }
     
-    
-    // let sumLength = 0.0;
-    // for (let i = 0; i < map.length - 1; i++) {
-    //     sumLength += Distance(i, i + 1);
-    // }
-    // sumLength += Distance(map.length - 1, 0);
-
-    // for (let i = 0; i < map.length - 1; i++) {
-    //     pheromone[i][i + 1] += (antNumber / sumLength);
-    //     pheromone[i + 1][i] += (antNumber / sumLength);
-    // }
-    // pheromone[map.length - 1][0] += (antNumber / sumLength);
-    // pheromone[0][map.length - 1] += (antNumber / sumLength);
 };
 
 function UpdatePheromone() {
@@ -164,16 +152,28 @@ function SetAnt() {
 function TSP() {
     let minimalDistance = Math.pow(2, 30);
     Initial();
-    for (let i = 1; i <= maxIterations; i++) {
+    let finalPath = [];
+    for (let i = 1; i <= 80; i++) {
         SetAnt();
+        
         for (let j = 0; j < antNumber; j++) {
             antGroup[j].Travel();
-            // console.log(antGroup[j].sumOfDistance);
-            minimalDistance = Math.min(minimalDistance, antGroup[j].sumOfDistance);
+            if (minimalDistance > antGroup[j].sumOfDistance) {
+                minimalDistance = antGroup[j].sumOfDistance; 
+                finalPath = antGroup[j].path;
+            }
         }
-        // console.log("next");
+        
         UpdatePheromone();
+        
         console.log("第" + i + "次迭代, 最短路径长度为: " + minimalDistance);
+        let tempPath = "";
+        finalPath.forEach((el) => {
+            tempPath += el + "->";
+        });
+        tempPath += "end";
+        console.log(tempPath);
+        console.log("");
     }
     console.log(minimalDistance);
 }
